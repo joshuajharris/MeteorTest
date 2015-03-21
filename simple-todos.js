@@ -21,5 +21,14 @@ if (Meteor.isClient) {
       return false; // tell browser to not perform default form submit action
     }
   });
+  //Add event listeners to task template
+  Template.task.events({
+    "click .toggle-checked": function() {
+      Tasks.update(this._id, {$set: {checked: ! this.checked}}); // when checkbox is clicked, toggle checked in mongoDB collection row 
+    },
+    "click .delete": function() {
+      Tasks.remove(this._id); // remove element from mongoDB collection
+    }
+  });
 
 }
