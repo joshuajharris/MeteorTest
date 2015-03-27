@@ -3,7 +3,17 @@ Tasks = new Mongo.Collection("tasks");
 if (Meteor.isClient) {
   Template.body.helpers({
     tasks: function() {
-      return Tasks.find({}); // return contents of tasks collection
+      if(Session.get("hideCompleted")) {
+        return Tasks.find({checked: {$ne: true}}, {sort: {createdAd: -1}});
+      } else {
+        return Tasks.find({}, {sort: {createdAt: -1}});
+      }
+    },
+    hideCompleted: function() {
+      return Session.get("hideCompleted");
+    },
+    incompleteCount: function () {
+      return Tasks.find({checked: {$ne: true}}).count();
     }
   });
   // add an event listener to .new-task, listening for submit
@@ -19,6 +29,9 @@ if (Meteor.isClient) {
       event.target.text.value = "";  // clear text field
 
       return false; // tell browser to not perform default form submit action
+    },
+    "change .hide-completed input": function (event) {
+      Session.set("hideCompleted", event.target.checked); 
     }
   });
   //Add event listeners to task template
