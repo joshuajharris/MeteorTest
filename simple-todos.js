@@ -23,7 +23,9 @@ if (Meteor.isClient) {
       // insert into mongodb collection
       Tasks.insert({
         text: text,
-        createdAt: new Date()
+        createdAt: new Date(),
+        owner: Meteor.userId(),
+        username: Meteor.user().username
       });
 
       event.target.text.value = "";  // clear text field
@@ -44,4 +46,7 @@ if (Meteor.isClient) {
     }
   });
 
+  Accounts.ui.config({
+    passwordSignupFields: "USERNAME_ONLY"
+  });
 }
